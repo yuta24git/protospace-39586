@@ -1,6 +1,7 @@
 class PrototypesController < ApplicationController
   before_action :set_prototype, only: [:edit, :show]
   before_action :move_to_new_session, only: [:new, :edit, :destroy]
+  before_action :move_to_root_path, only: :edit
 
   def index
     @prototypes = Prototype.includes(:user)
@@ -54,6 +55,12 @@ class PrototypesController < ApplicationController
   def move_to_new_session
     unless user_signed_in?
       redirect_to new_user_session_path
+    end
+  end
+
+  def move_to_root_path
+    unless current_user_id == @prototype.user_id
+      redirect_to root_path
     end
   end
 end
